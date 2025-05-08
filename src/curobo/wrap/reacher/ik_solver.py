@@ -776,6 +776,7 @@ class IKSolver(IKSolverConfig):
         use_nn_seed: bool = True,
         newton_iters: Optional[int] = None,
         link_poses: Optional[Dict[str, Pose]] = None,
+        warm_up: bool = False,
     ) -> IKResult:
         """Solve batch of IK problems.
 
@@ -830,6 +831,7 @@ class IKSolver(IKSolverConfig):
             use_nn_seed,
             newton_iters,
             link_poses=link_poses,
+            warm_up=warm_up,
         )
 
     def solve_batch_goalset(
@@ -1034,6 +1036,7 @@ class IKSolver(IKSolverConfig):
         use_nn_seed: bool = True,
         newton_iters: Optional[int] = None,
         link_poses: Optional[Dict[str, Pose]] = None,
+        warm_up: bool = False,
     ) -> IKResult:
         """Solve IK problem from ReacherSolveState. Called by all solve functions.
 
@@ -1071,7 +1074,7 @@ class IKSolver(IKSolverConfig):
         if newton_iters is not None:
             self.solver.newton_optimizer.outer_iters = newton_iters
         self.solver.reset()
-        result = self.solver.solve(goal_buffer, coord_position_seed)
+        result = self.solver.solve(goal_buffer, coord_position_seed, warm_up=warm_up)
         if newton_iters is not None:
             self.solver.newton_optimizer.outer_iters = self.og_newton_iters
         ik_result = self._get_result(num_seeds, result, goal_buffer.goal_pose, return_seeds)

@@ -212,7 +212,7 @@ class ReacherSolveState:
                 goal_pose = new_goal_pose
             else:
                 update_reference = True
-
+        
         if update_reference:
             current_solve_state = solve_state
             current_goal_buffer = solve_state.create_goal_buffer(

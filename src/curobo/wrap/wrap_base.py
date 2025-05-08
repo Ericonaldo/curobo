@@ -137,7 +137,7 @@ class WrapBase(WrapConfig):
     def tensor_args(self):
         return self.safety_rollout.tensor_args
 
-    def solve(self, goal: Goal, seed: Optional[torch.Tensor] = None):
+    def solve(self, goal: Goal, seed: Optional[torch.Tensor] = None, warm_up: bool = False):
         metrics = None
 
         filtered_state = self.safety_rollout.filter_robot_state(goal.current_state)
@@ -149,7 +149,7 @@ class WrapBase(WrapConfig):
         else:
             seed = seed.detach().clone()
         start_time = time.time()
-        if not self._init_solver:
+        if not self._init_solver or warm_up:
             log_info("Solver was not initialized, warming up solver")
             for _ in range(2):
                 act_seq = self.optimize(seed, shift_steps=0)
